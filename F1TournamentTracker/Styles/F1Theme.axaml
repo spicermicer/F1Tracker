@@ -1,0 +1,138 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+  <!-- 🌑 Global TextBlock style -->
+  <Style Selector="TextBlock">
+    <Setter Property="Foreground" Value="#FFECECEC"/>
+    <Setter Property="FontFamily" Value="avares://F1TournamentTracker/Assets/Fonts/Formula1-Regular.ttf#Formula1 Display"/>
+    <Setter Property="FontSize" Value="14"/>
+  </Style>
+
+  <!-- 🌌 Window background -->
+  <Style Selector="Window">
+    <Setter Property="Background">
+      <Setter.Value>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+          <GradientStop Color="#FF0A0A0A" Offset="0"/>
+          <GradientStop Color="#FF1C1C1C" Offset="1"/>
+        </LinearGradientBrush>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- 🚨 Buttons (default) -->
+  <Style Selector="Button">
+    <Setter Property="Background">
+      <Setter.Value>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+          <GradientStop Color="#FF2D2D2D" Offset="0"/>
+          <GradientStop Color="#FF1A1A1A" Offset="1"/>
+        </LinearGradientBrush>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="Foreground" Value="#FFF0F0F0"/>
+    <Setter Property="BorderBrush" Value="#FFFECE00"/>
+    <Setter Property="BorderThickness" Value="2"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="FontFamily" Value="avares://F1TournamentTracker/Assets/Fonts/Formula1-Regular.ttf#Formula1 Display"/>
+  </Style>
+
+  <!-- ⚡ Accent buttons -->
+  <Style Selector="Button.accent">
+    <Setter Property="Background" Value="#FFFFD700"/>
+    <Setter Property="Foreground" Value="#FF1A1A1A"/>
+    <Setter Property="BorderBrush" Value="#FFFC0000"/>
+    <Setter Property="BorderThickness" Value="1.5"/>
+  </Style>
+
+  <!-- ✍️ Text input -->
+  <Style Selector="TextBox">
+    <Setter Property="Background" Value="#FF141414"/>
+    <Setter Property="Foreground" Value="#FFFDFDFD"/>
+    <Setter Property="BorderBrush" Value="#FFFECE00"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="FontFamily" Value="avares://F1TournamentTracker/Assets/Fonts/Formula1-Regular.ttf#Formula1 Display"/>
+    <Setter Property="CornerRadius" Value="2"/>
+    <Setter Property="Padding" Value="6,4"/>
+  </Style>
+
+  <!-- 🧾 ComboBox -->
+  <Style Selector="ComboBox">
+    <Setter Property="Background" Value="#FF1C1C1C"/>
+    <Setter Property="Foreground" Value="#FFFDFDFD"/>
+    <Setter Property="BorderBrush" Value="#FFFECE00"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius" Value="4"/>
+    <Setter Property="Padding" Value="6,4"/>
+    <Setter Property="FontFamily" Value="avares://F1TournamentTracker/Assets/Fonts/Formula1-Regular.ttf#Formula1 Display"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+
+  <!-- 🏁 TabControl container -->
+  <Style Selector="TabControl">
+    <Setter Property="Background" Value="#FF0F0F0F"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="FontFamily" Value="Formula1 Display, Segoe UI, Poppins, sans-serif"/>
+  </Style>
+
+  <!-- 🟥 TabItem style -->
+  <Style Selector="TabItem">
+    <Setter Property="FontSize" Value="15"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="#FFCCCCCC"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="12,8"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="FontFamily" Value="avares://F1TournamentTracker/Assets/Fonts/Formula1-Regular.ttf#Formula1 Display"/>
+
+  </Style>
+
+  <!-- 🔥 Ferrari red underline for selected tab -->
+  <Style Selector="TabItem:checked">
+    <Setter Property="Foreground" Value="#FFFECE00"/>
+    <Setter Property="Background">
+      <Setter.Value>
+        <Template>
+          <Border Background="Transparent">
+            <Border.BorderBrush>
+              <SolidColorBrush Color="#FFDC0000"/>
+            </Border.BorderBrush>
+            <Border.BorderThickness>
+              <Thickness>0,0,0,20</Thickness>
+            </Border.BorderThickness>
+          </Border>
+        </Template>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
+  <!-- 🟥 Warnings and Penalties -->
+  <Style Selector="TextBlock.warning">
+    <Setter Property="Foreground" Value="#FFFFD700"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+  </Style>
+
+  <Style Selector="TextBlock.penalty">
+    <Setter Property="Foreground" Value="#FFFF4444"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+  </Style>
+
+  <!-- 🟩 Position display -->
+  <Style Selector="TextBlock.position">
+    <Setter Property="Foreground" Value="#FF00FF88"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="FontSize" Value="18"/>
+  </Style>
+
+  <!-- 🕒 Laptime -->
+  <Style Selector="TextBlock.laptime">
+    <Setter Property="Foreground" Value="#FF2196F3"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+
+</Styles>

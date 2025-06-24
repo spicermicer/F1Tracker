@@ -1,0 +1,66 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:F1TournamentTracker.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:F1TournamentTracker.Views"
+        xmlns:controls="clr-namespace:F1TournamentTracker.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="F1TournamentTracker.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+        Title="F1TournamentTracker">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+  <Grid RowDefinitions="*, Auto">
+    <!-- Charts -->
+    <TabControl Grid.Row="0">
+      
+      <!-- Drivers standings -->
+      <TabItem Header="Drivers Standings">
+        <TabControl>
+          <TabItem Header="Race Info">
+            <controls:RaceControls ItemsSource="{Binding Races}"/>
+          </TabItem>
+          <TabItem Header="Race to Championship">
+            <lvc:CartesianChart Series="{Binding ChampionshipRace}"
+                                LegendTextPaint="{Binding LegendTextPaint }"
+                                TooltipPosition="Auto" />
+          </TabItem>
+        </TabControl>
+      </TabItem>
+
+      <!-- Constructors Standings -->
+      <TabItem Header="Constructors Standings">
+        <lvc:CartesianChart Series="{Binding ConstructorsStandings}"
+                            XAxes="{Binding XAxes}"
+                            YAxes="{Binding YAxes}"
+                            TooltipPosition="Hidden"/>
+      </TabItem>
+
+      
+      <!-- Penalties -->
+      <TabItem Header="Penalties">
+        
+      </TabItem>
+
+    </TabControl>
+
+
+
+    <!-- Button(s) -->
+    <StackPanel Orientation="Horizontal"
+                Grid.Row="1"
+                Spacing="10">
+                
+      <Button Content="Import"
+              Command="{Binding Import}"/>
+
+      <Button Content="Teams"
+              Command="{Binding Teams}"/>
+    </StackPanel>
+  </Grid>
+</Window>

@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:data="using:F1TournamentTracker.Data"
+        xmlns:converters="using:F1TournamentTracker.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="F1TournamentTracker.Views.TeamManager"
+        Title="TeamManager">
+  <Window.Resources>
+    <converters:RgbToBrushMultiConverter x:Key="RgbToBrushMultiConverter" />
+  </Window.Resources>
+  
+  <DataGrid ItemsSource="{Binding TeamData}"
+            IsReadOnly="False"
+            CanUserReorderColumns="True"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="False"
+            GridLinesVisibility="All"
+            BorderThickness="1" BorderBrush="Gray">
+    <DataGrid.Columns>
+      <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+      <DataGridTextColumn Header="Red" Binding="{Binding Red}" />
+      <DataGridTextColumn Header="Green" Binding="{Binding Green}" />
+      <DataGridTextColumn Header="Blue" Binding="{Binding Blue}" />
+
+      <DataGridTemplateColumn Header="Colour">
+        <DataGridTemplateColumn.CellTemplate>
+          <DataTemplate DataType="data:TeamInfo">
+            <Rectangle>
+              <Rectangle.Fill>
+                <MultiBinding Converter="{StaticResource RgbToBrushMultiConverter}">
+                  <Binding Path="Red"/>
+                  <Binding Path="Green"/>
+                  <Binding Path="Blue"/>
+                </MultiBinding>
+              </Rectangle.Fill>
+            </Rectangle>
+          </DataTemplate>
+        </DataGridTemplateColumn.CellTemplate>        
+      </DataGridTemplateColumn>
+    </DataGrid.Columns>    
+  </DataGrid>
+</Window>

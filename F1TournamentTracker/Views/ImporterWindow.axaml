@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="using:F1TournamentTracker.Converters"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        x:Class="F1TournamentTracker.ImporterWindow"
+        SizeToContent="WidthAndHeight">
+  <Window.Resources>    
+    <converters:CountryFlagConverter  x:Key="CountryFlagConverter"/>
+  </Window.Resources>
+  <StackPanel Orientation="Vertical">
+    <TextBlock Text="Import CSV" Margin="10" FontSize="32" HorizontalAlignment="Center" />    
+    
+    <!-- Path -->
+    <Grid ColumnDefinitions="*, Auto">
+      <TextBox x:Name="txtPath" Grid.Column="0" Watermark="Path" Margin="5"/>
+      <Button x:Name="btnBrowse" Grid.Column="1" Content=".." Margin="5" Click="Browse_Click" />
+    </Grid>
+
+    <!-- Race Selector -->
+    <ComboBox x:Name="cmbRaces" Margin="5" HorizontalAlignment="Stretch" >
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnDefinitions="Auto, *">
+            <Image Grid.Column="0"
+                   Source="{Binding Country, Converter={StaticResource CountryFlagConverter}}"
+                   Width="24"
+                   Margin="0, 0, 10, 0"/>
+            <TextBlock Grid.Column="1" Text="{Binding Name}"/>
+          </Grid>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+    
+    <!-- Buttons -->
+    <Grid ColumnDefinitions="*, *">
+      <Button Grid.Column="0" Content="Cancel" Click="Cancel_Click" Margin="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+      <Button Grid.Column="1" Content="Confirm" Click="Confirm_Click" Margin="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+    </Grid>
+    
+    
+  </StackPanel>
+</Window>
