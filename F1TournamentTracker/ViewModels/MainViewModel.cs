@@ -6,16 +6,12 @@ using F1TournamentTracker.Data.Raw;
 using F1TournamentTracker.Managers;
 using F1TournamentTracker.Views;
 using LiveChartsCore;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using ReactiveUI;
 using SkiaSharp;
 using F1TournamentTracker.Misc;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using F1TournamentTracker.Graph;
 
 namespace F1TournamentTracker.ViewModels;
@@ -26,7 +22,8 @@ public class MainViewModel : ViewModelBase
 
     
     public Axis[] XAxes { get; set; } = [new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) }];
-    public Axis[] YAxes { get; set; } = [new Axis { IsVisible = false }];
+    public Axis[] YAxes { get; set; } = [new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)), MinLimit = 0 }];
+    public Axis[] NoAxes { get; set; } = [new Axis { IsVisible = false }];    
 
     private ISeries[] _championshipRace;
     public ISeries[] ChampionshipRace
@@ -40,6 +37,13 @@ public class MainViewModel : ViewModelBase
     {
         get => _constructorsStandings;
         set => this.RaiseAndSetIfChanged(ref _constructorsStandings, value);
+    }
+
+    private string[] _penalties;
+    public string[] Penalties
+    {
+        get => _penalties;
+        set => this.RaiseAndSetIfChanged(ref _penalties, value);
     }
 
     public MainViewModel()
@@ -89,7 +93,12 @@ public class MainViewModel : ViewModelBase
 
         ChampionshipRace = GraphManager.GenerateChampionshipRace(Races);
         ConstructorsStandings = GraphManager.GenerateConstructorChampionship(Races);
+        Penalties = GraphManager.GeneratePenaltyCount(Races);
+
+        
     }
+
+
 
     public void Teams()
     {

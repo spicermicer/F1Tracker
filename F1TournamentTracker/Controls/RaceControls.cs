@@ -53,7 +53,11 @@ namespace F1TournamentTracker.Controls
         {
             base.Render(context);
 
+            if (ItemsSource == null || ItemsSource.Length == 0)
+                return;
+
             var racerNames = ItemsSource.SelectMany(a => a.Results.Select(b => b.Driver)).Distinct().ToArray();
+
 
             var scoreDict = new Dictionary<string, int>();
             foreach (var item in ItemsSource)            

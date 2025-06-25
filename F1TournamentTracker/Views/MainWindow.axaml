@@ -27,7 +27,10 @@
           </TabItem>
           <TabItem Header="Race to Championship">
             <lvc:CartesianChart Series="{Binding ChampionshipRace}"
-                                LegendTextPaint="{Binding LegendTextPaint }"
+                                LegendTextPaint="{Binding LegendTextPaint}"
+                                LegendPosition="Right"
+                                XAxes="{Binding NoAxes}"
+                                YAxes="{Binding YAxes}"
                                 TooltipPosition="Auto" />
           </TabItem>
         </TabControl>
@@ -37,14 +40,20 @@
       <TabItem Header="Constructors Standings">
         <lvc:CartesianChart Series="{Binding ConstructorsStandings}"
                             XAxes="{Binding XAxes}"
-                            YAxes="{Binding YAxes}"
+                            YAxes="{Binding NoAxes}"
                             TooltipPosition="Hidden"/>
       </TabItem>
 
       
       <!-- Penalties -->
       <TabItem Header="Penalties">
-        
+        <ItemsControl ItemsSource="{Binding Penalties}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" Margin="5"/>
+            </DataTemplate>
+           </ItemsControl.ItemTemplate>
+        </ItemsControl>
       </TabItem>
 
     </TabControl>
