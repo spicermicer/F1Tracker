@@ -31,6 +31,12 @@ namespace F1TournamentTracker.Data.Raw
                 return null;
 
             var data = File.ReadAllText(path);
+
+            return Open(data, track);
+        }
+
+        public static RaceInfo? Open(string data, TrackInfo track)
+        {
             var datas = data.Split("\n\n").Select(a => a.Trim()).ToArray();
 
             var results = datas[0].Split("\n").Skip(1).Select(a => a.Split(",").Select(b => b.Replace("\"", "").Trim()).ToArray()).ToArray();

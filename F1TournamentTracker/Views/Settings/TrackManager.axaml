@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="F1TournamentTracker.Views.Settings.TrackManager">
+  
+  <DataGrid ItemsSource="{Binding TrackData}"
+            IsReadOnly="False"
+            CanUserReorderColumns="True"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="False"
+            GridLinesVisibility="All"
+            BorderThickness="1" BorderBrush="Gray">
+    <DataGrid.Columns>
+      <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+      <DataGridTextColumn Header="Abbreviations" Binding="{Binding Abbreviations}" />
+      <DataGridTextColumn Header="Country" Binding="{Binding CountryInfo}" />
+    </DataGrid.Columns>
+  </DataGrid>
+</UserControl>

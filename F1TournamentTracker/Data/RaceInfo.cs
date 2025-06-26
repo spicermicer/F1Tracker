@@ -32,5 +32,18 @@ namespace F1TournamentTracker.Data
             _results = results;            
             _incidents = incidents;
         }
+
+        public bool CheckValidity()
+        {
+            foreach (var result in _results)
+                if (result.Driver.Equals("Player", System.StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+            foreach (var incident in _incidents)
+                if (incident.Driver.Equals("Player", System.StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+            return true;
+        }
     }
 }

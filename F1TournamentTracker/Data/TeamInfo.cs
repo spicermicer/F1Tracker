@@ -4,6 +4,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using ReactiveUI;
 using SkiaSharp;
+using System.Text.Json.Serialization;
 
 namespace F1TournamentTracker.Data
 {
@@ -21,7 +22,10 @@ namespace F1TournamentTracker.Data
         }
 
 
+        [JsonIgnore]
         public Color Color => new(255, Red, Green, Blue);
+
+        [JsonIgnore]
         public SolidColorPaint GraphColor => new(new SKColor(Red, Green, Blue)) { StrokeThickness = 4 };
 
         public byte Red
@@ -53,8 +57,12 @@ namespace F1TournamentTracker.Data
 
             PropertyChanged += (s, e) =>
             {
-                this.RaisePropertyChanged(nameof(Color));
+                if (e.PropertyName != nameof(Color))
+                    this.RaisePropertyChanged(nameof(Color));
             };
         }
+
+        public TeamInfo() : this(string.Empty, 0, 0, 0) { }
+
     }
 }

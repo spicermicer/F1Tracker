@@ -4,14 +4,12 @@ using Avalonia.Markup.Xaml;
 using F1TournamentTracker.Data;
 using F1TournamentTracker.ViewModels;
 
-namespace F1TournamentTracker.Views;
+namespace F1TournamentTracker.Views.Settings;
 
-internal partial class TeamManager : Window
+internal partial class TeamManager : UserControl
 {
-    public TeamManager(TeamInfo[] teamData)
+    public TeamManager()
     {
         InitializeComponent();
-
-        DataContext = new TeamManagerViewModel(teamData);
     }
 }

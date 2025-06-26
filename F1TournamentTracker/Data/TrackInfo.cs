@@ -1,6 +1,7 @@
 ﻿using F1TournamentTracker.Data.Raw;
 using ReactiveUI;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace F1TournamentTracker.Data
 {
@@ -8,7 +9,8 @@ namespace F1TournamentTracker.Data
     {
         private string _name;
         private string _abbreviations;
-        private CultureInfo _country;
+        private string _countryInfo;
+
 
         public string Name
         {
@@ -22,17 +24,23 @@ namespace F1TournamentTracker.Data
             set => this.RaiseAndSetIfChanged(ref _abbreviations, value);
         }
 
-        public CultureInfo Country
+        public string CountryInfo
         {
-            get => _country;
-            set => this.RaiseAndSetIfChanged(ref _country, value);
+            get => _countryInfo;
+            set => this.RaiseAndSetIfChanged(ref _countryInfo, value);
         }
+
+        [JsonIgnore]
+        public CultureInfo Country => new(CountryInfo);
 
         public TrackInfo(string name, string abbreviations, string country)
         {
             _name = name;
             _abbreviations = abbreviations;
-            _country = new CultureInfo(country);
+            _countryInfo = country;
         }
+
+        public TrackInfo() : this(string.Empty, string.Empty, string.Empty) { }
+
     }
 }

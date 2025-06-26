@@ -23,4 +23,10 @@
   <ItemGroup>
     <Folder Include="Assets\Flags\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Settings\TrackManager.axaml.cs">
+      <DependentUpon>TrackManager.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

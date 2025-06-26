@@ -15,7 +15,7 @@ namespace F1TournamentTracker.Controls
     internal class RaceControls : Control
     {
 
-        private CountryFlagConverter _converter = new();
+        private readonly CountryFlagConverter _converter = new();
 
         /// <summary>
         /// RaceResults StyledProperty definition
@@ -107,8 +107,8 @@ namespace F1TournamentTracker.Controls
 
                 var race = ItemsSource[i];
 
-                var image = _converter.Convert(race.Track.Country, null, null, null) as Bitmap;
-                context.DrawImage(image, new Rect(
+                var image = _converter.Convert(race.Track.Country, typeof(bool), null, CultureInfo.CurrentCulture) as Bitmap;
+                context.DrawImage(image!, new Rect(
                     x + (cellSize.Width / 2) - 12,
                     0, 24, 16));
 
@@ -117,7 +117,7 @@ namespace F1TournamentTracker.Controls
                 context.DrawText(titleText,  new Point(x + (cellSize.Width / 2) - (titleText.Width / 2), topBarHeight - titleText.Height));
 
 
-                var bestDriver = race.Results.MinBy(a => a.Best).Driver;
+                var bestDriver = race.Results.MinBy(a => a.Best)!.Driver;
                 foreach (var cell in race.Results)
                 {
                     var index = racerNames.IndexOf(cell.Driver);

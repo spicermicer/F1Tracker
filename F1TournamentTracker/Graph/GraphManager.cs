@@ -1,9 +1,6 @@
 ﻿using F1TournamentTracker.Data;
-using F1TournamentTracker.Data.Raw;
 using F1TournamentTracker.Graph.Objects;
 using F1TournamentTracker.Managers;
-using F1TournamentTracker.Views;
-using HarfBuzzSharp;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
@@ -12,11 +9,8 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace F1TournamentTracker.Graph
 {
@@ -58,7 +52,7 @@ namespace F1TournamentTracker.Graph
                     LineSmoothness = 0,
                     Fill = null,
                 };
-            }).OrderByDescending(a => a.Values.Last().Value);
+            }).OrderByDescending(a => a.Values!.Last().Value);
 
             return [.. series];
         }
@@ -67,8 +61,6 @@ namespace F1TournamentTracker.Graph
         private static string GetGeometry()
         {
             return _fillIndex++ % 2 == 0 ? SVGPoints.Square : SVGPoints.Circle;
-
-
         }
 
         public static ISeries[] GenerateConstructorChampionship(RaceInfo[] races)
@@ -82,7 +74,7 @@ namespace F1TournamentTracker.Graph
 
             var series = new RowSeries<TeamPoint>()
             {
-                Values = teamDict.OrderBy(a => a.Value).Select(a => new TeamPoint(a.Key, a.Value)).ToArray(),
+                Values = [.. teamDict.OrderBy(a => a.Value).Select(a => new TeamPoint(a.Key, a.Value))],
                 DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
                 DataLabelsPosition = DataLabelsPosition.End,
                 DataLabelsTranslate = new(-1, 0),
@@ -103,7 +95,7 @@ namespace F1TournamentTracker.Graph
 
         public static string[] GeneratePenaltyCount(RaceInfo[] races)
         {
-            Dictionary<string, int> dict = new Dictionary<string, int>();
+            Dictionary<string, int> dict = [];
 
             foreach (var race in races)
                 foreach (var incident in race.Incidents)
@@ -115,7 +107,12 @@ namespace F1TournamentTracker.Graph
 
         private static int GetPenaltyScore(string penalty)
         {
-            return 1;
+            return penalty switch
+            {
+                "Warning" => 1,
+                "Penalty" => 1,
+                _ => 1,
+            };
         }
 
     }

@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:F1TournamentTracker.Views"
-        xmlns:controls="clr-namespace:F1TournamentTracker.Controls"
+        xmlns:settings="clr-namespace:F1TournamentTracker.Views.Settings"
+        xmlns:controls="clr-namespace:F1TournamentTracker.Controls"        
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="F1TournamentTracker.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -15,9 +16,10 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
-  <Grid RowDefinitions="*, Auto">
+  <Grid>
+    
     <!-- Charts -->
-    <TabControl Grid.Row="0">
+    <TabControl>
       
       <!-- Drivers standings -->
       <TabItem Header="Drivers Standings">
@@ -56,20 +58,36 @@
         </ItemsControl>
       </TabItem>
 
+      <!-- Settings -->
+      <TabItem Header="Settings">
+        <Grid ColumnDefinitions="*, *" RowDefinitions="*, Auto">
+          
+          <!-- Teams Settings -->
+          <settings:TeamManager Grid.Column="0" Grid.Row="0" />
+
+          <!-- Track settings -->
+          <settings:TrackManager Grid.Column="1" Grid.Row="0" />
+          
+          
+          <!-- Save button -->
+          <Button Grid.Column="0"
+                  Grid.Row="1" 
+                  Content="Save"
+                  Command="{Binding Save}"/>
+          
+          
+        </Grid>        
+      </TabItem>
     </TabControl>
 
+    <!-- Import button -->
+    <Button Content="+" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"          
+            Margin="10"
+            Command="{Binding Import}" />
+            
+            
 
-
-    <!-- Button(s) -->
-    <StackPanel Orientation="Horizontal"
-                Grid.Row="1"
-                Spacing="10">
-                
-      <Button Content="Import"
-              Command="{Binding Import}"/>
-
-      <Button Content="Teams"
-              Command="{Binding Teams}"/>
-    </StackPanel>
   </Grid>
 </Window>

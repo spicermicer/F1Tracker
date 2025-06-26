@@ -12,14 +12,24 @@ namespace F1TournamentTracker.Managers
 {
     static class SaveManager
     {
-        static private string _trackPath = "tracks.json";
-        static private string _teamsPath = "teams.json";
+        static private readonly string _trackPath = "Settings/tracks.json";
+        static private readonly string _teamsPath = "Settings/teams.json";
 
 
         public static void Save(TrackInfo[] tracks)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(_trackPath)!);
+
             var json = JsonSerializer.Serialize(tracks);
             File.WriteAllText(_trackPath, json);
+        }
+
+        public static void Save(TeamInfo[] teams)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_teamsPath)!);
+
+            var json = JsonSerializer.Serialize(teams);
+            File.WriteAllText(_teamsPath, json);
         }
 
 
@@ -56,7 +66,7 @@ namespace F1TournamentTracker.Managers
 
             //Otherwise, load json
             var json = File.ReadAllText(_trackPath);
-            return JsonSerializer.Deserialize<TrackInfo[]>(json);
+            return JsonSerializer.Deserialize<TrackInfo[]>(json)!;
         }
 
         public static TeamInfo[] LoadTeams()
@@ -78,7 +88,7 @@ namespace F1TournamentTracker.Managers
 
             //Otherwise, load json
             var json = File.ReadAllText(_teamsPath);
-            return JsonSerializer.Deserialize<TeamInfo[]>(json);
+            return JsonSerializer.Deserialize<TeamInfo[]>(json)!;
         }
 
     }
