@@ -63,11 +63,19 @@ public partial class ImporterWindow : Window
         // Get top level from the current control. Alternatively, you can use Window reference instead.
         var topLevel = GetTopLevel(this)!;
 
+        var defaultPath = Path.Join(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "My Games",
+            "F1 24",
+            "session results");
+
+
         // Start async operation to open the dialog.
         var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Open Text File",
-            AllowMultiple = false
+            AllowMultiple = false,
+            SuggestedStartLocation = await StorageProvider.TryGetFolderFromPathAsync(defaultPath)
         });
 
         if (files.Count >= 1)

@@ -13,6 +13,7 @@ using SkiaSharp;
 using F1TournamentTracker.Misc;
 using System.Linq;
 using F1TournamentTracker.Graph;
+using System.IO;
 
 namespace F1TournamentTracker.ViewModels;
 
@@ -84,15 +85,18 @@ public class MainViewModel : ViewModelBase
     {
         var tracks = SaveManager.LoadTracks();
 
-        Races = System.IO.Directory
-            .GetFiles(_dataDir, "*.csv")
-            .Select(CsvParser.Open)
-            .OrderBy(a => tracks.IndexOf(b => b.Name == a!.Track.Name))
-            .ToArray()!;
+        if (Directory.Exists(_dataDir))
+        {
+            Races = System.IO.Directory
+                .GetFiles(_dataDir, "*.csv")
+                .Select(CsvParser.Open)
+                .OrderBy(a => tracks.IndexOf(b => b.Name == a!.Track.Name))
+                .ToArray()!;
 
-        ChampionshipRace = GraphManager.GenerateChampionshipRace(Races);
-        ConstructorsStandings = GraphManager.GenerateConstructorChampionship(Races);
-        Penalties = GraphManager.GeneratePenaltyCount(Races);
+            ChampionshipRace = GraphManager.GenerateChampionshipRace(Races);
+            ConstructorsStandings = GraphManager.GenerateConstructorChampionship(Races);
+            Penalties = GraphManager.GeneratePenaltyCount(Races);
+        }
 
         TeamData = SaveManager.LoadTeams();
         TrackData = SaveManager.LoadTracks();

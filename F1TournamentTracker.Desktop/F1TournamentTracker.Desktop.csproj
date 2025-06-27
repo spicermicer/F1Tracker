@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PackageIcon>f1.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +16,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\F1TournamentTracker\F1TournamentTracker.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="f1.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>
