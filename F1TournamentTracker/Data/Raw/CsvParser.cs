@@ -26,7 +26,7 @@ namespace F1TournamentTracker.Data.Raw
         public static RaceInfo? Open(string path)
         {
             var tracks = SaveManager.LoadTracks();
-            var track = tracks.FirstOrDefault(a => a.Name == Path.GetFileNameWithoutExtension(path));
+            var track = tracks.FirstOrDefault(a => a.Name == Path.GetFileNameWithoutExtension(path).Split("-")[0]);
             if (track == null)
                 return null;
 

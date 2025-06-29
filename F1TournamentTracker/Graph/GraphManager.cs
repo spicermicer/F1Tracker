@@ -20,6 +20,27 @@ namespace F1TournamentTracker.Graph
         {
             var teams = SaveManager.LoadTeams().ToDictionary(a => a.Name);
 
+            //Generate driver shapes
+            var teamCount = new Dictionary<string, int>();
+            var driverGeometry = new Dictionary<string, string>();
+            foreach (var race in races) {
+                foreach (var result in race.Results)
+                {
+                    if (!driverGeometry.ContainsKey(result.Driver))
+                    {
+                        if (!teamCount.TryGetValue(result.Team, out int index))
+                            index = 0;
+
+                        driverGeometry[result.Driver] = GetGeometry(index);
+                        teamCount[result.Team] = index + 1;
+
+                    }
+                }
+            }
+
+
+
+            //Generate score data
             var scoreDict = new Dictionary<string, List<RacePoint>>();            
             foreach (var race in races) {
                 foreach (var result in race.Results)
@@ -47,7 +68,7 @@ namespace F1TournamentTracker.Graph
                     DataLabelsPosition = DataLabelsPosition.End,
                     Stroke = a.Value.First().TeamColor,
                     GeometryStroke = a.Value.First().TeamColor,
-                    GeometrySvg = GetGeometry(),
+                    GeometrySvg = driverGeometry[a.Key],
                     GeometrySize = 10,
                     LineSmoothness = 0,
                     Fill = null,
@@ -56,11 +77,10 @@ namespace F1TournamentTracker.Graph
 
             return [.. series];
         }
-
-        static int _fillIndex = 0;
-        private static string GetGeometry()
+        
+        private static string GetGeometry(int count)
         {
-            return _fillIndex++ % 2 == 0 ? SVGPoints.Square : SVGPoints.Circle;
+            return count % 2 == 0 ? SVGPoints.Square : SVGPoints.Circle;
         }
 
         public static ISeries[] GenerateConstructorChampionship(RaceInfo[] races)

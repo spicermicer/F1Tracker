@@ -90,14 +90,18 @@ namespace F1TournamentTracker.Controls
             for (int i = 0; i < racerFormattedText.Length; i++)
             {
                 var y = topBarHeight + (i * nameSize.Height);
+                var centeredY = y + (nameSize.Height / 2) - (racerFormattedText[i].Height / 2);
 
 
-                context.DrawText(racerFormattedText[i], 
-                    new Point(nameSize.Width - racerFormattedText[i].Width, y));
+                context.DrawText(racerFormattedText[i], new Point(
+                    nameSize.Width - racerFormattedText[i].Width, 
+                    centeredY));
 
 
                 var totalText = CreateText(scoreDict[racerNames[i]].ToString());
-                context.DrawText(totalText, new Point(Bounds.Width - (totalsWidth / 2) - (totalText.Width / 2), y));
+                context.DrawText(totalText, new Point(
+                    Bounds.Width - (totalsWidth / 2) - (totalText.Width / 2), 
+                    centeredY));
             }
 
             //Draw Race labels            

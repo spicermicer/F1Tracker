@@ -4,7 +4,6 @@ using DynamicData;
 using F1TournamentTracker.Data;
 using F1TournamentTracker.Data.Raw;
 using F1TournamentTracker.Managers;
-using F1TournamentTracker.Views;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -87,8 +86,10 @@ public class MainViewModel : ViewModelBase
 
         if (Directory.Exists(_dataDir))
         {
-            Races = System.IO.Directory
-                .GetFiles(_dataDir, "*.csv")
+            var raceFiles = SaveManager.LoadOrder();
+
+            Races = raceFiles
+                .Select(a => Path.Combine("Data/Races", a))
                 .Select(CsvParser.Open)
                 .OrderBy(a => tracks.IndexOf(b => b.Name == a!.Track.Name))
                 .ToArray()!;
@@ -119,11 +120,23 @@ public class MainViewModel : ViewModelBase
 
         if (string.IsNullOrWhiteSpace(window.SelectedPath))
             return;
-
         
-        var path = System.IO.Path.Combine(_dataDir, window.SelectedTrack.Name) + ".csv";
-        System.IO.Directory.CreateDirectory(_dataDir);
-        System.IO.File.WriteAllText(path, window.ImportData);
+        var path = Path.Combine(_dataDir, window.SelectedTrack.Name) + ".csv";
+
+        //If this already exists, add a number and continue
+        int index = 0;
+        while (File.Exists(path))
+        {
+            path = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + $"-{index++}.csv");
+        }
+
+        //Save the new order
+        var order = SaveManager.LoadOrder();        
+        order = [.. order, Path.GetFileName(path)];
+        SaveManager.Save(order);
+
+        Directory.CreateDirectory(_dataDir);
+        File.WriteAllText(path, window.ImportData);
 
         Load();
     }

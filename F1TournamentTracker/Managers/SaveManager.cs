@@ -1,4 +1,5 @@
-﻿using F1TournamentTracker.Data;
+﻿using Avalonia.Controls;
+using F1TournamentTracker.Data;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,9 @@ namespace F1TournamentTracker.Managers
 {
     static class SaveManager
     {
-        static private readonly string _trackPath = "Settings/tracks.json";
-        static private readonly string _teamsPath = "Settings/teams.json";
+        static private readonly string _trackPath = "Settings/Tracks.json";
+        static private readonly string _teamsPath = "Settings/Teams.json";
+        static private readonly string _orderPath = "Data/Order.json";
 
 
         public static void Save(TrackInfo[] tracks)
@@ -32,36 +34,45 @@ namespace F1TournamentTracker.Managers
             File.WriteAllText(_teamsPath, json);
         }
 
+        public static void Save(string[] order)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_teamsPath)!);
+
+            var json = JsonSerializer.Serialize(order);
+            File.WriteAllText(_orderPath, json);
+
+        }
+
 
         public static TrackInfo[] LoadTracks()
         {
             //If none exist, load default
             if (!Path.Exists(_trackPath))
                 return [
-                    new TrackInfo("Bahrain International Circuit", "BIC", "BH"),
-                    new TrackInfo("Jeddah Corniche Circuit", "JCC", "SA"),
-                    new TrackInfo("Albert Park Circuit", "APC", "AU"),
-                    new TrackInfo("Suzuka International Racing Course", "SIRC", "JP"),
-                    new TrackInfo("Shanghai International Circuit", "SIC", "CN"),
+                    new TrackInfo("Bahrain International Circuit", "BHR", "BH"),
+                    new TrackInfo("Jeddah Corniche Circuit", "SAU", "SA"),
+                    new TrackInfo("Albert Park Circuit", "AUS", "AU"),
+                    new TrackInfo("Suzuka International Racing Course", "JPN", "JP"),
+                    new TrackInfo("Shanghai International Circuit", "CHN", "CN"),
                     new TrackInfo("Miami International Autodrome", "MIA", "US"),
-                    new TrackInfo("Autodromo Enzo e Dino Ferrari", "Imola", "IT"),
+                    new TrackInfo("Autodromo Enzo e Dino Ferrari", "EMI", "IT"),
                     new TrackInfo("Circuit de Monaco", "MON", "MC"),
-                    new TrackInfo("Circuit Gilles Villeneuve", "CGV", "CA"),
-                    new TrackInfo("Circuit de Barcelona‑Catalunya", "CAT", "ES"),
-                    new TrackInfo("Red Bull Ring", "RBR", "AT"),
-                    new TrackInfo("Silverstone Circuit", "SIL", "GB"),
+                    new TrackInfo("Circuit Gilles Villeneuve", "CAN", "CA"),
+                    new TrackInfo("Circuit de Barcelona‑Catalunya", "ESP", "ES"),
+                    new TrackInfo("Red Bull Ring", "AUT", "AT"),
+                    new TrackInfo("Silverstone Circuit", "GBR", "GB"),
                     new TrackInfo("Hungaroring", "HUN", "HU"),
-                    new TrackInfo("Circuit de Spa‑Francorchamps", "SPA", "BE"),
-                    new TrackInfo("Circuit Zandvoort", "ZAN", "NL"),
-                    new TrackInfo("Autodromo Nazionale di Monza", "MON", "IT"),
-                    new TrackInfo("Baku City Circuit", "BAK", "AZ"),
-                    new TrackInfo("Marina Bay Street Circuit", "SGP", "SG"),
-                    new TrackInfo("Circuit of the Americas", "COTA", "US"),
-                    new TrackInfo("Autódromo Hermanos Rodríguez", "MEX", "MX"),
-                    new TrackInfo("Autódromo José Carlos Pace", "INT", "BR"),
-                    new TrackInfo("Las Vegas Strip Circuit", "LV", "US"),
+                    new TrackInfo("Circuit de Spa‑Francorchamps", "BEL", "BE"),
+                    new TrackInfo("Circuit Zandvoort", "NED", "NL"),
+                    new TrackInfo("Autodromo Nazionale di Monza", "ITA", "IT"),
+                    new TrackInfo("Baku City Circuit", "AZE", "AZ"),
+                    new TrackInfo("Marina Bay Street Circuit", "SIN", "SG"),
+                    new TrackInfo("Circuit of the Americas", "USA", "US"),
+                    new TrackInfo("Autódromo Hermanos Rodríguez", "MXC", "MX"),
+                    new TrackInfo("Autódromo José Carlos Pace", "SAP", "BR"),
+                    new TrackInfo("Las Vegas Strip Circuit", "LVG", "US"),
                     new TrackInfo("Lusail International Circuit", "QAT", "QA"),
-                    new TrackInfo("Yas Marina Circuit", "YMC", "AE"),
+                    new TrackInfo("Yas Marina Circuit", "ABU", "AE"),
                     ];
 
             //Otherwise, load json
@@ -89,6 +100,17 @@ namespace F1TournamentTracker.Managers
             //Otherwise, load json
             var json = File.ReadAllText(_teamsPath);
             return JsonSerializer.Deserialize<TeamInfo[]>(json)!;
+        }
+
+        public static string[] LoadOrder()
+        {
+            if (!Path.Exists(_orderPath))
+                return Directory.EnumerateFiles("Data/Races", "*.csv").Select(a => Path.GetFileName(a)).ToArray();
+
+            var json =  File.ReadAllText(_orderPath);
+            return JsonSerializer.Deserialize<string[]>(json)!;
+
+
         }
 
     }
