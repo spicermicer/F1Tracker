@@ -74,19 +74,21 @@ namespace F1TournamentTracker.Controls
             var races = ItemsSource.Select(a => a.Track).ToArray();
 
             var topBarHeight = 40;
-            var totalsWidth = 60;
+            var totalsWidth = 40;
+            var diffWidth = 40;
 
             var nameSize = new Size(
-                racerFormattedText.Max(a => a.Width),
+                racerFormattedText.Length > 0 ? racerFormattedText.Max(a => a.Width) : 100,
                 (Bounds.Height - topBarHeight) / (racerFormattedText.Length));
 
 
-            var cellArea = new Rect(nameSize.Width + 5, topBarHeight, Bounds.Width - nameSize.Width - totalsWidth, Bounds.Height - topBarHeight);
+            var cellArea = new Rect(nameSize.Width + 5, topBarHeight, Bounds.Width - nameSize.Width - totalsWidth - diffWidth, Bounds.Height - topBarHeight);
             var cellSize = new Size(
                 cellArea.Width / races.Length,
                 nameSize.Height);
 
-            //Draw driver names + totals
+            //Draw driver names, totals, difference
+            int lastScore = 0;
             for (int i = 0; i < racerFormattedText.Length; i++)
             {
                 var y = topBarHeight + (i * nameSize.Height);
@@ -97,11 +99,21 @@ namespace F1TournamentTracker.Controls
                     nameSize.Width - racerFormattedText[i].Width, 
                     centeredY));
 
-
-                var totalText = CreateText(scoreDict[racerNames[i]].ToString());
+                var total = scoreDict[racerNames[i]];
+                var totalText = CreateText(total.ToString());
                 context.DrawText(totalText, new Point(
-                    Bounds.Width - (totalsWidth / 2) - (totalText.Width / 2), 
+                    Bounds.Width - (totalsWidth / 2) - (totalText.Width / 2) - diffWidth, 
                     centeredY));
+
+                var difference = lastScore - total;
+                lastScore = total;
+                var differenceText = CreateText(i == 0 ? "-" : $"+{difference}", Brushes.Red);
+                context.DrawText(differenceText, new Point(
+                    Bounds.Width - (diffWidth / 2) - (differenceText.Width / 2),
+                    centeredY
+                    ));
+
+
             }
 
             //Draw Race labels            
@@ -121,7 +133,7 @@ namespace F1TournamentTracker.Controls
                 context.DrawText(titleText,  new Point(x + (cellSize.Width / 2) - (titleText.Width / 2), topBarHeight - titleText.Height));
 
 
-                var bestDriver = race.Results.MinBy(a => a.Best)!.Driver;
+                var bestDriver = race.Results.Length > 0 ? race.Results.MinBy(a => a.Best)!.Driver : null;
                 foreach (var cell in race.Results)
                 {
                     var index = racerNames.IndexOf(cell.Driver);

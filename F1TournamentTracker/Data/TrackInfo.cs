@@ -42,5 +42,11 @@ namespace F1TournamentTracker.Data
 
         public TrackInfo() : this(string.Empty, string.Empty, string.Empty) { }
 
+
+        public override string ToString()
+        {
+            return $"{Abbreviations} - {Name}";
+        }
+
     }
 }

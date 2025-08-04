@@ -28,12 +28,37 @@
             <controls:RaceControls ItemsSource="{Binding Races}"/>
           </TabItem>
           <TabItem Header="Race to Championship">
-            <lvc:CartesianChart Series="{Binding ChampionshipRace}"
-                                LegendTextPaint="{Binding LegendTextPaint}"
-                                LegendPosition="Right"
-                                XAxes="{Binding NoAxes}"
-                                YAxes="{Binding YAxes}"
-                                TooltipPosition="Auto" />
+            <Grid RowDefinitions="Auto, *">              
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Top"
+                          HorizontalAlignment="Left"
+                          Grid.Row="0"
+                          Spacing="10"
+                          Margin="5">
+                <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                  <TextBlock Text="Number of Races" VerticalAlignment="Center"/>
+
+                  <NumericUpDown Value="{Binding RaceCount}"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Margin="5"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                  <TextBlock Text="Points to Win" VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding WinCount}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </StackPanel>
+
+              <lvc:CartesianChart Series="{Binding ChampionshipRace}"
+                                  Sections="{Binding ChampionshipSections}"
+                                  LegendTextPaint="{Binding LegendTextPaint}"
+                                  LegendPosition="Right"
+                                  XAxes="{Binding RaceXAxes}"
+                                  YAxes="{Binding RaceYAxes}"
+                                  Grid.Row="1"
+                                  TooltipPosition="Auto" />
+            </Grid>
           </TabItem>
         </TabControl>
       </TabItem>
@@ -49,10 +74,10 @@
       
       <!-- Penalties -->
       <TabItem Header="Penalties">
-        <ItemsControl ItemsSource="{Binding Penalties}">
+        <ItemsControl ItemsSource="{Binding Penalties}" ScrollViewer.VerticalScrollBarVisibility="Visible">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding}" Margin="5"/>
+              <TextBlock Text="{Binding}" Margin="5" />
             </DataTemplate>
            </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -60,7 +85,7 @@
 
       <!-- Settings -->
       <TabItem Header="Settings">
-        <Grid ColumnDefinitions="*, *" RowDefinitions="*, Auto">
+        <Grid ColumnDefinitions="*, *, *" RowDefinitions="*, Auto">
           
           <!-- Teams Settings -->
           <settings:TeamManager Grid.Column="0" Grid.Row="0" />
@@ -68,6 +93,8 @@
           <!-- Track settings -->
           <settings:TrackManager Grid.Column="1" Grid.Row="0" />
           
+          <!-- Replacement settings -->
+          <settings:ReplacementManager Grid.Column="2" Grid.Row="0" />
           
           <!-- Save button -->
           <Button Grid.Column="0"
@@ -80,12 +107,32 @@
       </TabItem>
     </TabControl>
 
-    <!-- Import button -->
-    <Button Content="+" 
-            VerticalAlignment="Top"
-            HorizontalAlignment="Right"          
-            Margin="10"
-            Command="{Binding Import}" />
+    <!-- Season buttons -->
+    <StackPanel Orientation="Horizontal"
+                Spacing="20"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right">
+      
+      <!-- Seasons -->
+      <StackPanel Orientation="Horizontal">        
+        <TextBlock Text="Season: " 
+                   VerticalAlignment="Center"/>
+        <ComboBox ItemsSource="{Binding Seasons}"
+                  SelectedItem="{Binding SelectedSeason}" 
+                  MinWidth="50"
+                  VerticalAlignment="Center"/>
+        <Button Content="+"
+                Margin="10"
+                VerticalAlignment="Center"
+                Command="{Binding AddSeason}" />
+      </StackPanel>
+      
+
+      <!-- Add Track -->
+      <Button Content="+"
+              Margin="10"
+              Command="{Binding Import}" />
+    </StackPanel>
             
             
 

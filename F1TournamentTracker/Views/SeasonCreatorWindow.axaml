@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="F1TournamentTracker.SeasonCreatorWindow"
+        Title="SeasonCreatorWindow">
+  <Grid RowDefinitions="*, Auto">
+    <DataGrid x:Name="DatTracks"
+              Grid.Row="0"
+              SelectionMode="Extended"
+              CanUserReorderColumns="True"
+              CanUserResizeColumns="True"
+              CanUserSortColumns="False"
+              GridLinesVisibility="All"
+              BorderThickness="1" BorderBrush="Gray">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+        <DataGridTextColumn Header="Abbreviations" Binding="{Binding Abbreviations}" />
+        <DataGridTextColumn Header="Country" Binding="{Binding CountryInfo}" />
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="20">
+      <CheckBox x:Name="ChkShuffle" Content="Shuffle"/>
+      
+      <Button Content="Cancel" Click="Cancel_Click"/>
+      <Button Content="Confirm" Click="Confirm_Click" />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -11,11 +11,20 @@ namespace F1TournamentTracker;
 
 public partial class ImporterWindow : Window
 {
-    public ImporterWindow()
+
+    private Replacement[] _replacements;
+
+    public ImporterWindow(RaceInfo[] races, Replacement[] replacements)
     {
         InitializeComponent();
 
-        var tracks = SaveManager.LoadTracks();
+        _replacements = replacements;
+
+        var tracks = races
+            .Where(a => a.Results.Length == 0)
+            .Select(a => a.Track)
+            .ToArray();
+
         cmbRaces.ItemsSource = tracks;
         cmbRaces.SelectedIndex = 0;
         cmbRaces.SelectionChanged += CmbRaces_SelectionChanged;
@@ -54,8 +63,16 @@ public partial class ImporterWindow : Window
     {
         SelectedPath = txtPath.Text!;
 
-        if (File.Exists(txtPath.Text))
-            txtContents.Text = File.ReadAllText(txtPath.Text);
+        if (!File.Exists(txtPath.Text))
+            return;
+
+        var txt = File.ReadAllText(txtPath.Text);
+
+        foreach (var replacement in _replacements)        
+            txt = txt.Replace(replacement.Input, replacement.Output);
+        
+
+        txtContents.Text = txt;
     }
 
     private async void Browse_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

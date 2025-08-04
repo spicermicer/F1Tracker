@@ -8,24 +8,29 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace F1TournamentTracker.Graph
 {
     internal static class GraphManager
-    {
-        public static ISeries[] GenerateChampionshipRace(RaceInfo[] races)
+    {        
+        public static (ISeries[], int, int) GenerateChampionshipRace(RaceInfo[] races, int numberOfRaces)
         {
             var teams = SaveManager.LoadTeams().ToDictionary(a => a.Name);
 
             //Generate driver shapes
+            bool anyRaces = false;
             var teamCount = new Dictionary<string, int>();
             var driverGeometry = new Dictionary<string, string>();
             foreach (var race in races) {
                 foreach (var result in race.Results)
                 {
+                    anyRaces = true;
+
                     if (!driverGeometry.ContainsKey(result.Driver))
                     {
                         if (!teamCount.TryGetValue(result.Team, out int index))
@@ -37,8 +42,6 @@ namespace F1TournamentTracker.Graph
                     }
                 }
             }
-
-
 
             //Generate score data
             var scoreDict = new Dictionary<string, List<RacePoint>>();            
@@ -57,9 +60,19 @@ namespace F1TournamentTracker.Graph
             //Add everyone starting at 0
             foreach(var score in scoreDict)            
                 score.Value.Insert(0, new RacePoint(score.Key, score.Value.First().TeamColor, 0));
-            
 
-            var series = scoreDict.Select(a =>
+
+            //Ordered Score Array
+            var scoreArray = scoreDict.OrderByDescending(a => a.Value!.Last().Value).ToArray();
+
+            //Calculate number of races left
+            var leadDriverPoints = anyRaces ? scoreArray[0].Value.Last().Value : 0;
+            var secondDriverPoints = anyRaces ? scoreArray[1].Value.Last().Value : 0;
+            var maximumRemainingPoints = anyRaces ? 26 * (numberOfRaces - races.Length) : 0;
+            var pointsNeeded = anyRaces ? secondDriverPoints + maximumRemainingPoints + 1 : 0;
+
+            //Convert to series
+            var series = scoreArray.Select(a =>
             {
                 return new LineSeries<RacePoint, VariableSVGPathGeometry>()
                 {
@@ -73,11 +86,28 @@ namespace F1TournamentTracker.Graph
                     LineSmoothness = 0,
                     Fill = null,
                 };
-            }).OrderByDescending(a => a.Values!.Last().Value);
+            });
 
-            return [.. series];
+            return ([.. series], (int)pointsNeeded, (int)leadDriverPoints);
         }
-        
+
+        public static RectangularSection[] CreateYSection(int sectionValue)
+        {
+            return [
+               new RectangularSection
+                {
+                    Yi = sectionValue,
+                    Yj = sectionValue,
+                    Stroke = new SolidColorPaint
+                    {
+                        Color = SKColors.Red,
+                        StrokeThickness = 3,
+                        PathEffect = new DashEffect([6, 6])
+                    }
+                }
+           ];
+        }
+
         private static string GetGeometry(int count)
         {
             return count % 2 == 0 ? SVGPoints.Square : SVGPoints.Circle;
@@ -115,25 +145,47 @@ namespace F1TournamentTracker.Graph
 
         public static string[] GeneratePenaltyCount(RaceInfo[] races)
         {
-            Dictionary<string, int> dict = [];
+            Dictionary<string, Dictionary<string, int>> dict = [];
+
+
 
             foreach (var race in races)
                 foreach (var incident in race.Incidents)
-                    if (!dict.TryAdd(incident.Driver, GetPenaltyScore(incident.IncidentType)))
-                        dict[incident.Driver] += GetPenaltyScore(incident.IncidentType);
+                {
+                    dict.TryAdd(incident.Driver, []);
+                    dict[incident.Driver].TryAdd(incident.IncidentType, 0);
+                    dict[incident.Driver][incident.IncidentType]++;
+                }
 
-            return [.. dict.OrderByDescending(a => a.Value).Select(a => $"{a.Key} : {a.Value}")];
+            return [.. dict
+                .OrderByDescending(a => a.Value
+                    .Sum(b => b.Value))
+                .Select(a => $"{a.Key} : \n\t{string.Join("\n\t", a.Value
+                    .OrderByDescending(a => a.Value)
+                    .Select(a => $"{a.Key} : {a.Value}"))}")];
         }
 
-        private static int GetPenaltyScore(string penalty)
+        public static Axis[] GenerateXAxes(RaceInfo[] races, int raceCount)
         {
-            return penalty switch
+            var axis = new Axis()
             {
-                "Warning" => 1,
-                "Penalty" => 1,
-                _ => 1,
+                LabelsPaint = new SolidColorPaint(SKColors.White),
+                Labels = [ "", .. races.Select(a => a.Track.Abbreviations)],
+                SeparatorsPaint = new SolidColorPaint(SKColors.LightGray) {  StrokeThickness = 1 },
+                MaxLimit = raceCount
             };
+            return [axis];
         }
 
+        public static Axis[] GenerateYAxes(int maxScore, int winValue)
+        {
+            var axis = new Axis()
+            {
+                LabelsPaint = new SolidColorPaint(SKColors.White),
+                SeparatorsPaint = new SolidColorPaint(SKColors.LightGray) { StrokeThickness = 1 },
+                MaxLimit = Math.Max(maxScore, winValue) + 10
+            };
+            return [axis];
+        }
     }
 }

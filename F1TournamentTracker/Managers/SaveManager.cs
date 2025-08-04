@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace F1TournamentTracker.Managers
@@ -15,10 +17,20 @@ namespace F1TournamentTracker.Managers
     {
         static private readonly string _trackPath = "Settings/Tracks.json";
         static private readonly string _teamsPath = "Settings/Teams.json";
-        static private readonly string _orderPath = "Data/Order.json";
+        static private readonly string _replacementsPath = "Settings/Replacements.json";
+
+        private static string GetPath(int season)
+        {
+            return $"Data/Season-{season}.json"; ;
+        }
+
+        private static JsonSerializerOptions _jsonOptions = new()
+        {
+            WriteIndented = true
+        };
 
 
-        public static void Save(TrackInfo[] tracks)
+        public static void SaveTracks(TrackInfo[] tracks)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_trackPath)!);
 
@@ -26,7 +38,7 @@ namespace F1TournamentTracker.Managers
             File.WriteAllText(_trackPath, json);
         }
 
-        public static void Save(TeamInfo[] teams)
+        public static void SaveTeams(TeamInfo[] teams)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_teamsPath)!);
 
@@ -34,13 +46,12 @@ namespace F1TournamentTracker.Managers
             File.WriteAllText(_teamsPath, json);
         }
 
-        public static void Save(string[] order)
+        public static void SaveReplacements(Replacement[] replacements)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_teamsPath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(_replacementsPath)!);
 
-            var json = JsonSerializer.Serialize(order);
-            File.WriteAllText(_orderPath, json);
-
+            var json = JsonSerializer.Serialize(replacements);
+            File.WriteAllText(_replacementsPath, json);
         }
 
 
@@ -102,15 +113,42 @@ namespace F1TournamentTracker.Managers
             return JsonSerializer.Deserialize<TeamInfo[]>(json)!;
         }
 
-        public static string[] LoadOrder()
+        public static Replacement[] LoadReplacements()
         {
-            if (!Path.Exists(_orderPath))
-                return Directory.EnumerateFiles("Data/Races", "*.csv").Select(a => Path.GetFileName(a)).ToArray();
+            if (!Path.Exists(_replacementsPath))
+                return [];
 
-            var json =  File.ReadAllText(_orderPath);
-            return JsonSerializer.Deserialize<string[]>(json)!;
+            var json = File.ReadAllText(_replacementsPath);
+            return JsonSerializer.Deserialize<Replacement[]>(json)!;
+        }
+        
+        public static void SaveRaceInfo(RaceInfo[] data, int season)
+        {
+            var path = GetPath(season);
+            var json = JsonSerializer.Serialize(data, _jsonOptions);
+            File.WriteAllText(path, json);
+        }
 
+        public static RaceInfo[] LoadRaceInfo(int season)
+        {
+            var path = GetPath(season);
+            var json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<RaceInfo[]>(json)!;
+        }
 
+        public static int[] GetSeasons()
+        {
+            var ret = new List<int>();
+            for (int i = 1; true; i++)
+            {
+                var path = GetPath(i);
+                if (!File.Exists(path))
+                    break;
+
+                ret.Add(i);
+            }
+
+            return [.. ret];
         }
 
     }
